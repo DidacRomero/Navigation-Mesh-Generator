@@ -23,14 +23,14 @@ public class Tile_Edges : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.magenta;
-        if(vertices[0] != null)
-        {
-            for(int i = 0; i < 4; ++i)
-            {
-                Gizmos.DrawWireSphere(vertices[i],0.14f);
-            }
-        }
+        //Gizmos.color = Color.magenta;
+        //if(vertices[0] != null)
+        //{
+        //    for(int i = 0; i < 4; ++i)
+        //    {
+        //        Gizmos.DrawWireSphere(vertices[i],0.14f);
+        //    }
+        //}
     }
 
     // Update is called once per frame
