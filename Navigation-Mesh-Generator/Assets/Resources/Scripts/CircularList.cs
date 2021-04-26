@@ -27,3 +27,24 @@ public class CircularList<T> : List<T>//This class extends the functionality of 
     }
 
 };
+
+public class CStruct
+{
+    CircularList<HMVert> L; //List of vertices that form the polygonal chain of vertices that arent' completed yet
+    HMVert RM;  //Rightmost vertex
+
+    public HMVert GetRM()
+    {
+        HMVert ret;
+
+        ret = L[0];
+        foreach(HMVert vert in L)
+        {
+            if (vert.pos.x > ret.pos.x)
+                ret = vert;
+        }
+
+        RM = ret;   //Placing this line here avois code replication!
+        return ret;
+    }
+};

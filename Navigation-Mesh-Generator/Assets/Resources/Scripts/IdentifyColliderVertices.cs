@@ -185,7 +185,7 @@ public class IdentifyColliderVertices : MonoBehaviour
         Queue<HMVert> X_st = GetXStruct();
         //x_struct
         //y struct
-        //c struct
+        CStruct c_st = new CStruct();
 
         //TRI
         //Edges
