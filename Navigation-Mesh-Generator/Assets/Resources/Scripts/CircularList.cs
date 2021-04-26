@@ -48,3 +48,33 @@ public class CStruct
         return ret;
     }
 };
+
+public class BalancedTree<T>
+{
+    LinkedList<T> root;
+
+    public void Find()
+    {
+
+    }
+    public void Insert(T t)
+    {
+        //Insert with the y value of the lineal function y = ax + b
+        
+    }
+
+    public void Delete(T t)
+    {
+
+    }
+
+    public void Succ()
+    {
+
+    }
+
+    public void Prev()
+    {
+
+    }
+};
