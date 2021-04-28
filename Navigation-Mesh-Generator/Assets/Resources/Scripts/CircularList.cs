@@ -49,32 +49,80 @@ public class CStruct
     }
 };
 
-public class BalancedTree<T>
+
+public class TreeNode
 {
-    LinkedList<T> root;
-
-    public void Find()
-    {
-
-    }
-    public void Insert(T t)
-    {
-        //Insert with the y value of the lineal function y = ax + b
-        
-    }
-
-    public void Delete(T t)
-    {
-
-    }
-
-    public void Succ()
-    {
-
-    }
-
-    public void Prev()
-    {
-
-    }
+    public List<TreeNode> children;
+    public TreeNode parent;
+    public float y;
 };
+
+public struct Edge
+{
+
+};
+
+
+//public class BalancedTree : SortedDictionary<>
+//{
+
+//};
+
+//public class BalancedTree
+//{
+//    public TreeNode root;
+
+//    public void Find()
+//    {
+
+//    }
+//    public void Insert(Edge s, bool in_edge)
+//    {
+//        //Insert with the y value of the lineal function y = ax + b
+//        TreeNode t = new TreeNode();
+//        root.children.Add(t);
+//    }
+
+//    public void Delete()
+//    {
+//        if(root != null)
+//        {
+
+//        }
+//        else
+//        {
+//            Debug.Log("Tree has no root, therefore it is empty");
+//        }
+//    }
+
+//    public void Succ()
+//    {
+
+//    }
+
+//    public void Prev()
+//    {
+
+//    }
+
+//    private TreeNode FindNode(TreeNode t, float y)
+//    {
+//        TreeNode ret = null;
+//        if (root!= null)
+//        {
+//            if (t.children != null && t.children.Count > 0)
+//            {
+//                foreach (TreeNode child in t.children)
+//                {
+//                    if (child.y == y)
+//                    {
+//                        return child;   //Case where we found the node
+//                    }
+//                    //Keep searching
+//                    ret = FindNode(child, y);
+//                }
+//            }
+//        }
+//        return ret;    //
+//    }
+//};
