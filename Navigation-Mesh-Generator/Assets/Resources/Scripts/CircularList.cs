@@ -57,16 +57,22 @@ public class TreeNode
     public float y;
 };
 
+[System.Serializable]
 public struct Edge
+{
+    Vector2 e; //Non_Normalized_Edge vector
+
+    public Edge(Vector2 vec)
+    {
+        e = vec;
+    }   //Constructor
+};
+
+[System.Serializable]
+public class BalancedTree : SortedDictionary<float, Edge>
 {
 
 };
-
-
-//public class BalancedTree : SortedDictionary<>
-//{
-
-//};
 
 //public class BalancedTree
 //{
