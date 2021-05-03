@@ -57,21 +57,64 @@ public class TreeNode
     public float y;
 };
 
+
+public enum EdgeType
+{
+    IN =1,
+    OUT = 0
+}
+
 [System.Serializable]
 public struct Edge
 {
-    Vector2 e; //Non_Normalized_Edge vector
+    Vector2 vec; //Non_Normalized_Edge vector
+    Vector2 iPoint; //initial point
 
-    public Edge(Vector2 vec)
+    //Linear expression floats
+    public float a;
+    public float b;
+
+    public Edge(Vector2 vec) //Constructor
     {
-        e = vec;
-    }   //Constructor
+        this.vec = vec;
+        this.iPoint = vec; //Just for now as we test, later on we will assign the actual value here
+
+        //Fill linear expression data
+        a = this.vec.y / this.vec.x;
+        b = iPoint.y - a * iPoint.x;
+    }   
 };
 
 [System.Serializable]
 public class BalancedTree : SortedDictionary<float, Edge>
 {
+    float x;
+    //Insert with sorting value determined by y = ax + b
+    public void Insert(Edge s, EdgeType t)
+    {
+        float y = s.a * x + s.b;
+        this.Add(y,s);
+    }
 
+    public void Delete(Edge s, EdgeType t)
+    {
+
+    }
+
+    public void Succ(Edge s, EdgeType t)
+    {
+
+    }
+
+    public void Pred(Edge s, EdgeType t)
+    {
+
+    }
+
+    public void Find(HMVert p)
+    {
+
+    }
 };
 
 //public class BalancedTree
