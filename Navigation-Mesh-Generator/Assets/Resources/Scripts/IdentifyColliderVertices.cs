@@ -121,12 +121,8 @@ public class IdentifyColliderVertices : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.magenta;
+        Gizmos.color = Color.yellow;
         
-        //foreach (Vector2 pos in verts)
-        //{
-        //    Gizmos.DrawWireSphere(pos, 0.14f);
-        //}
         for (int i = 0; i < verts.Count; ++i)
         {
             Gizmos.DrawWireSphere(verts[i], 0.14f);
@@ -135,8 +131,6 @@ public class IdentifyColliderVertices : MonoBehaviour
             if(i< pol_verts.Count -1)
             Debug.DrawLine(pol_verts[i], pol_verts[i+1], Color.white,0.01f);
         }
-
-
     }
 
     // Update is called once per frame
