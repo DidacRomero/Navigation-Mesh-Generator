@@ -10,13 +10,38 @@ public class y_st_Test : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        y_test = new BalancedTree();
+        y_test = new BalancedTree(new EdgeComparer());
 
-        y_test.Add(1,new Edge(new Vector2(0.5f,3)) );
-        y_test.Add(6, new Edge(new Vector2(4.5f, -3)) );
-        y_test.Add(-4, new Edge(new Vector2(-1.5f, 27)) ); 
-        y_test.Add(10, new Edge(new Vector2(5, 5.27f)) );
-        y_test.Add(0, new Edge(new Vector2(-37, 0)) );
+        y_test.Insert(new Edge(new Vector2(2,0), new Vector2(1,1)), EdgeType.IN );
+        y_test.Insert(new Edge(new Vector2(2, 0), new Vector2(-1, 0)), EdgeType.IN);
+        y_test.Insert(new Edge(new Vector2(0, 1), new Vector2(-1, -1)), EdgeType.OUT);
+        y_test.Insert(new Edge(new Vector2(0, 1), new Vector2(1, 0)), EdgeType.OUT);
+
+        //Testing Find
+        {
+            HMVert vert1 = new HMVert();
+            vert1.pos = new Vector2(1,1);
+            vert1.type = VERTEX_TYPE.END;
+
+            HMVert vert2 = new HMVert();
+            vert2.pos = new Vector2(-1,1);
+            vert2.type = VERTEX_TYPE.START;
+
+            HMVert vert3 = new HMVert();
+            vert3.pos = new Vector2(-1,0);
+            vert3.type = VERTEX_TYPE.START;
+
+            HMVert vert4 = new HMVert();
+            vert4.pos = new Vector2(1,0);
+            vert4.type = VERTEX_TYPE.END;
+
+
+            y_test.Find(vert1);
+            y_test.Find(vert2);
+            y_test.Find(vert3);
+            y_test.Find(vert4);
+        }
+        
     }
 
     // Update is called once per frame

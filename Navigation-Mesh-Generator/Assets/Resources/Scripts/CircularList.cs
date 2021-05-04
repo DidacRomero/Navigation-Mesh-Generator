@@ -65,8 +65,9 @@ public enum EdgeType
 }
 
 [System.Serializable]
-public struct Edge
+public class Edge
 {
+    public float y; //Variable used for sorting, y value according to y = ax +b at the moment of insertion
     Vector2 vec; //Non_Normalized_Edge vector
     Vector2 iPoint; //initial point
 
@@ -74,26 +75,52 @@ public struct Edge
     public float a;
     public float b;
 
-    public Edge(Vector2 vec) //Constructor
+    public Edge(Vector2 vec, Vector2 iPoint) //Constructor
     {
         this.vec = vec;
-        this.iPoint = vec; //Just for now as we test, later on we will assign the actual value here
+        this.iPoint = iPoint; //Just for now as we test, later on we will assign the actual value here
 
         //Fill linear expression data
         a = this.vec.y / this.vec.x;
         b = iPoint.y - a * iPoint.x;
-    }   
+        y = 0;
+    }
 };
 
+public class EdgeComparer : IComparer<Edge>
+{
+    public int Compare(Edge i, Edge j)
+    {
+        if (i.y > j.y)
+            return 1;
+        else if (i.y < j.y)
+            return -1;
+        else //if (i.y == j.y)
+        {
+            //Here we avoid returning a 0 since the sorted dictionary would reject the edge saying a key is already there,
+            //But the reality is that at a same given point we can have the same y value if both edges intersect
+            //We choose to compare the by higher b value
+            if (i.b > j.b)
+                return 1;
+            else
+            return -1;
+        }
+    }
+}
+
 [System.Serializable]
-public class BalancedTree : SortedDictionary<float, Edge>
+public class BalancedTree : SortedDictionary<Edge, EdgeType>
 {
     float x;
+
+    public BalancedTree(IComparer<Edge> comp) : base(comp)  //SortedDIctionary Constructor with IComparer
+    {
+    }
     //Insert with sorting value determined by y = ax + b
     public void Insert(Edge s, EdgeType t)
     {
-        float y = s.a * x + s.b;
-        this.Add(y,s);
+        s.y = s.a * x + s.b;
+        this.Add(s,t);
     }
 
     public void Delete(Edge s, EdgeType t)
@@ -113,7 +140,24 @@ public class BalancedTree : SortedDictionary<float, Edge>
 
     public void Find(HMVert p)
     {
+        if(p.type == VERTEX_TYPE.START)
+        {
+            //List<float> keys = new List<float>(this.Keys);  //Get all keys to find the edges above & below
+            //foreach(float y in keys)
+            //{
+                
+            //}
+            // y = ax + b should be equal than the vertex.y for edges connected to our vertex
+            
+        }
+        else if (p.type == VERTEX_TYPE.END)
+        {
 
+        }
+        else if (p.type == VERTEX_TYPE.BEND)
+        {
+
+        }
     }
 };
 
