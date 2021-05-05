@@ -35,8 +35,8 @@ public class y_st_Test : MonoBehaviour
             vert4.pos = new Vector2(1,0);
             vert4.type = VERTEX_TYPE.END;
 
-
-            y_test.Find(vert1);
+            List<Edge> test_list;
+            test_list = y_test.Find(vert1);
             y_test.Find(vert2);
             y_test.Find(vert3);
             y_test.Find(vert4);
