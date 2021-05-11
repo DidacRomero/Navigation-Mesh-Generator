@@ -32,6 +32,35 @@ public class MeshGenerator : MonoBehaviour
         
     }
 
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawMesh(mesh);
+
+
+        Gizmos.color = Color.yellow;
+
+        for (int i = 0; i < vertices.Length; ++i)
+        {
+            Gizmos.DrawWireSphere(vertices[i], 0.14f);
+        }
+
+        //Avoid getting out of range on the last vertex
+        for(int i = 0; i < triangles.Length; ++i)
+        {
+            //We need to render the lines a bit over the z position of the mesh
+            if(i < triangles.Length -1)
+            {
+                Vector3 vert1 = vertices[triangles[i]];
+                Vector3 vert2 = vertices[triangles[i+1]];
+                //vert1.z += 0.1f; vert2.z += 0.1f;
+                Debug.DrawLine(vert1, vert2, Color.green, 0.01f);
+            }
+        }
+        //Debug.DrawLine(vertices[1], vertices[2], Color.green, 0.01f);
+
+    }
+
     void CreateTestMesh()
     {
         vertices = new Vector3[]
@@ -67,14 +96,14 @@ public class MeshGenerator : MonoBehaviour
 
             0, 2, 1,
             1, 2, 3,
-            3,2,4,
-            3,4,5,
-            3,5,6,
-            3,6,8,
-            3,8,7,
-            8,6,9,
-            8,9,10,
-            9,11,10
+            3, 2, 4,
+            3, 4, 5,
+            3, 5, 6,
+            3, 6, 8,
+            3, 8, 7,
+            8, 6, 9,
+            8, 9, 10,
+            9, 11, 10
         };
     }
 }
