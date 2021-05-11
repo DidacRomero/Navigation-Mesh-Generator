@@ -36,26 +36,30 @@ public class MeshGenerator : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawMesh(mesh);
-
-
         Gizmos.color = Color.yellow;
 
-        for (int i = 0; i < vertices.Length; ++i)
+        List<Vector3> verts = new List<Vector3>();
+        if (mesh == null)
+            return;
+
+        mesh.GetVertices(verts);
+
+        for (int i = 0; i < verts.Count; ++i)
         {
-            Gizmos.DrawWireSphere(vertices[i], 0.14f);
+            Gizmos.DrawWireSphere(verts[i], 0.14f);
         }
 
+        int[] tris = mesh.GetTriangles(0);
+
         //Avoid getting out of range on the last vertex
-        for(int i = 0; i < triangles.Length; ++i)
+        int j = 0;
+        for(int i = 0; i < tris.Length / 3; ++i)
         {
             //We need to render the lines a bit over the z position of the mesh
-            if(i < triangles.Length -1)
-            {
-                Vector3 vert1 = vertices[triangles[i]];
-                Vector3 vert2 = vertices[triangles[i+1]];
-                //vert1.z += 0.1f; vert2.z += 0.1f;
-                Debug.DrawLine(vert1, vert2, Color.green, 0.01f);
-            }
+            j = 3 * i;
+            Debug.DrawLine(verts[tris[j]], verts[tris[j + 1]], Color.green, 0.01f);
+            Debug.DrawLine(verts[tris[j+1]], verts[tris[j + 2]], Color.green, 0.01f);
+            Debug.DrawLine(verts[tris[j + 2]], verts[tris[j]], Color.green, 0.01f);
         }
         //Debug.DrawLine(vertices[1], vertices[2], Color.green, 0.01f);
 
