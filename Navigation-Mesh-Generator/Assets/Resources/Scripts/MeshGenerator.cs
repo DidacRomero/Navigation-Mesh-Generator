@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour
 {
-    Mesh mesh;
+    public Mesh mesh;
 
     Vector3[] vertices;
     int[] triangles;
@@ -24,6 +24,9 @@ public class MeshGenerator : MonoBehaviour
         mesh.triangles = triangles;
 
         mesh.RecalculateNormals();
+
+        MeshFilter mfil = GetComponent<MeshFilter>();
+        mfil.mesh = mesh;
     }
 
     // Update is called once per frame

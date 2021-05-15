@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 461976171}
   - component: {fileID: 461976170}
   - component: {fileID: 461976169}
+  - component: {fileID: 461976168}
   m_Layer: 0
   m_Name: ManualMesh
   m_TagString: Untagged
@@ -141,6 +142,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &461976168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461976167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94ae1b3ef6eebcd46a21ec26dc82b767, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mesh: {fileID: 0}
 --- !u!33 &461976169
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -161,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fc98e07f3dd3644598132c362fe81d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mesh: {fileID: 0}
 --- !u!4 &461976171
 Transform:
   m_ObjectHideFlags: 0
