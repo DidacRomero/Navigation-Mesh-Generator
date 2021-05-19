@@ -16,6 +16,7 @@ public class WayNode
     public WayNode(Vector3[] vertices)
     {
         verts = vertices;
+        pos = (vertices[0] + vertices[1] + vertices[2]) / 3.0f;
     }
 
     public WayNode(Vector3[] vertices, Vector3 center_pos)
@@ -95,6 +96,17 @@ public class WaypointClasses : MonoBehaviour
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        if(test != null && test.Count > 0)
+        {
+            for(int i = 0; i < test.Count; ++i)
+            {
+                Gizmos.DrawWireSphere(test[i].pos, 0.14f);
+            }
+        }
+    }
+
     public void FillFromMesh(MeshFilter mf)
     {
         Mesh m = mf.mesh;
@@ -122,3 +134,4 @@ public class WaypointClasses : MonoBehaviour
         int testing = 0;
     }
 }
+
