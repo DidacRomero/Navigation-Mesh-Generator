@@ -27,6 +27,7 @@ public class MeshGenerator : MonoBehaviour
 
         MeshFilter mfil = GetComponent<MeshFilter>();
         mfil.mesh = mesh;
+        this.gameObject.AddComponent<MeshCollider>();
     }
 
     // Update is called once per frame
