@@ -144,7 +144,10 @@ public class WaypointClasses : MonoBehaviour
         //If the spacebar is pressed
         if (Input.GetKeyDown(KeyCode.Space) == true)
         {
+            float time = Time.realtimeSinceStartup;
             FillFromMesh(GetComponent<MeshFilter>());
+            float fTime = Time.realtimeSinceStartup - time;
+            Debug.Log("Process took: " + fTime + " Seconds" );
         }
 
         //Testing a raycast
