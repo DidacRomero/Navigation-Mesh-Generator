@@ -89,9 +89,12 @@ public class AdjacencyList : SortedList < int, WayNode >
             Debug.LogWarning("Can't calculate Adjacency on an empty list!");
             return;
         }
+        //Setting the layerMask to raycast only against the navigation mesh, 
+        //remember to match this number to whichever layer in your project represents the navigation meshes!
+        int layerMask = 1 << 6; 
 
         //Iterate the list
-        for(int i = 0; i < this.Count; ++i)
+        for (int i = 0; i < this.Count; ++i)
         {
             if (this[i].adjacent_nodes == null)
                 this[i].adjacent_nodes = new List<int>();
@@ -109,7 +112,7 @@ public class AdjacencyList : SortedList < int, WayNode >
                     RaycastHit hit;
                     Ray ray = new Ray(point2,point - point2);
                     Debug.DrawRay(ray.origin,ray.direction * 1.0f,Color.red, 100.0f);
-                    if(Physics.Raycast(ray, out hit, 1.0f))
+                    if(Physics.Raycast(ray, out hit, 1.0f, layerMask))
                     {
                         //Use the index of the triangle hit to fill the adjacency information
                         if(!this[i].adjacent_nodes.Contains(hit.triangleIndex))

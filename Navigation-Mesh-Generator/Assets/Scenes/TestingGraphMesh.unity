@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 461976169}
   - component: {fileID: 461976168}
   - component: {fileID: 461976172}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ManualMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
