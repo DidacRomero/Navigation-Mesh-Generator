@@ -205,7 +205,6 @@ public class WaypointClasses : MonoBehaviour
             test.Insert(i,n);
         }
         test.CalculateAdjacency();
-        int testing = 0;
     }
 }
 
