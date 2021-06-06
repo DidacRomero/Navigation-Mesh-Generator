@@ -9,6 +9,7 @@
     }
   ],
   "dependencies": {
+    "com.guazu.lib-tess-dot-net": "file:D:/UPC University/TFG/Packages/com.guazu.lib-tess-dot-net-master",
     "com.unity.2d.animation": "5.0.3",
     "com.unity.2d.pixel-perfect": "4.0.1",
     "com.unity.2d.psdimporter": "4.0.2",

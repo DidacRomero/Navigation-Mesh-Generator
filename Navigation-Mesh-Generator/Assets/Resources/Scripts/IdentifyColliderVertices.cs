@@ -136,7 +136,8 @@ public class IdentifyColliderVertices : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       //var test = LibTess
+       
     }
 
     //Sort vertices in ascending X order then ascending y order
@@ -183,6 +184,5 @@ public class IdentifyColliderVertices : MonoBehaviour
 
         //TRI
         //Edges
-
     }
 }

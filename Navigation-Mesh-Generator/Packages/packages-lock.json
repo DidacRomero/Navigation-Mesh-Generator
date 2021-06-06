@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "com.guazu.lib-tess-dot-net": {
-      "version": "file:com.guazu.lib-tess-dot-net-master",
+      "version": "file:D:/UPC University/TFG/Packages/com.guazu.lib-tess-dot-net-master",
       "depth": 0,
-      "source": "embedded",
+      "source": "local",
       "dependencies": {}
     },
     "com.unity.2d.animation": {
