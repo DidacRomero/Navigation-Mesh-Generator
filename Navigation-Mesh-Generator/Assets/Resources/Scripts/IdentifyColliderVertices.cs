@@ -28,6 +28,9 @@ public class IdentifyColliderVertices : MonoBehaviour
     [SerializeField] List<Vector2> pol_verts = new List<Vector2>();
     [SerializeField] List<HMVert> hm_verts = new List<HMVert>();
 
+    //Test Mesh
+    Mesh m = null;
+
 
     [SerializeField] private Queue<HMVert> queue  = new Queue<HMVert>();
     // Start is called before the first frame update
@@ -131,6 +134,11 @@ public class IdentifyColliderVertices : MonoBehaviour
             if(i< pol_verts.Count -1)
             Debug.DrawLine(pol_verts[i], pol_verts[i+1], Color.white,0.01f);
         }
+
+        if (m == null)
+            return;
+
+        Gizmos.DrawMesh(m);
     }
 
     // Update is called once per frame
@@ -138,6 +146,47 @@ public class IdentifyColliderVertices : MonoBehaviour
     {
        //var test = LibTess
        
+        if(Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            createMesh();
+        }
+    }
+
+    private void createMesh()
+    {
+        var Tess = new LibTessDotNet.Tess();
+
+        LibTessDotNet.ContourVertex[] contour = new LibTessDotNet.ContourVertex[pol_verts.Count];
+
+        for(int i = 0; i < pol_verts.Count; ++i)
+        {
+            contour[i] = new LibTessDotNet.ContourVertex();
+            contour[i].Position = new LibTessDotNet.Vec3(pol_verts[i].x, pol_verts[i].y, 0.0f);
+        }
+
+        //Add a contour
+        Tess.AddContour( contour, LibTessDotNet.ContourOrientation.Clockwise);
+
+        Tess.Tessellate();
+
+        //Test to generate a mesh
+        m = new Mesh();
+
+        Vector3[] vertices = new Vector3[pol_verts.Count];
+
+        //for (int i = 0; i < pol_verts.Count; ++i)
+        //{
+        //    vertices[i] = new Vector3(pol_verts[i].x, pol_verts[i].y, 0.0f);
+        //}
+
+        for(int i = 0; i < Tess.Vertices.Length; ++i)
+        {
+            vertices[i] = new Vector3(Tess.Vertices[i].Position.X, Tess.Vertices[i].Position.Y, Tess.Vertices[i].Position.Z) ;
+        }
+        m.vertices = vertices;
+        m.triangles = Tess.Elements;
+
+        m.RecalculateNormals();
     }
 
     //Sort vertices in ascending X order then ascending y order
