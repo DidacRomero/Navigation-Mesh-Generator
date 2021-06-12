@@ -30,6 +30,7 @@ public class IdentifyColliderVertices : MonoBehaviour
 
     //Test Mesh
     Mesh m = null;
+    MeshFilter mf = null;
 
 
     [SerializeField] private Queue<HMVert> queue  = new Queue<HMVert>();
@@ -165,7 +166,7 @@ public class IdentifyColliderVertices : MonoBehaviour
         }
 
         //Add a contour
-        Tess.AddContour( contour, LibTessDotNet.ContourOrientation.Clockwise);
+        Tess.AddContour( contour, LibTessDotNet.ContourOrientation.CounterClockwise);
 
         Tess.Tessellate();
 
@@ -187,6 +188,15 @@ public class IdentifyColliderVertices : MonoBehaviour
         m.triangles = Tess.Elements;
 
         m.RecalculateNormals();
+
+        //Turn the mesh into a mesh filter
+        AddMeshFilter();
+    }
+
+    public void AddMeshFilter()
+    {
+        mf = gameObject.AddComponent<MeshFilter>();
+        mf.mesh = m;
     }
 
     //Sort vertices in ascending X order then ascending y order
