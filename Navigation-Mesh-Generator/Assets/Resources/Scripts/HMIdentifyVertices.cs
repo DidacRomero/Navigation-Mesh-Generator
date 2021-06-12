@@ -20,7 +20,7 @@ public struct HMVert
     public VERTEX_TYPE type;
 };
 
-public class IdentifyColliderVertices : MonoBehaviour
+public class HMIdentifyVertices : MonoBehaviour
 {
 
     CompositeCollider2D col;
@@ -153,7 +153,7 @@ public class IdentifyColliderVertices : MonoBehaviour
         }
     }
 
-    private void createMesh()
+    public void createMesh()
     {
         var Tess = new LibTessDotNet.Tess();
 

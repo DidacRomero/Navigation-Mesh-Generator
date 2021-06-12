@@ -79,7 +79,7 @@ public class AdjacencyList : SortedList < int, WayNode >
         }
     }
 
-    //This function populate sthe adjacency lists of each wayNode, 
+    //This function populates the adjacency lists of each wayNode, 
     //this function is therefore intended to be used with lists which have no adjacency information yet
     public void CalculateAdjacency()
     {
@@ -103,7 +103,7 @@ public class AdjacencyList : SortedList < int, WayNode >
                 //we find adjacent nodes with the bisectors and a raycast
                 for( int j = 0; j < this[i].bisectors.Length; ++j)
                 {
-                    Vector3 point = this[i].verts[j] + this[i].bisectors[j] + this[i].bisectors[j] * 0.1f;
+                    Vector3 point = this[i].verts[j] + this[i].bisectors[j] + this[i].bisectors[j] * 0.01f;
                     //point += this[i].bisectors[j] * 0.1f;
                     Vector3 point2 = point;
                     point2.z -= 0.1f;
@@ -127,59 +127,9 @@ public class AdjacencyList : SortedList < int, WayNode >
             }
         }
     }
-};
 
-public class WaypointClasses : MonoBehaviour
-{
-
-    //Adjacency List
-    AdjacencyList test;
-    // Start is called before the first frame update
-    void Start()
-    {
-        test = new AdjacencyList();   
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //If the spacebar is pressed
-        if (Input.GetKeyDown(KeyCode.Space) == true)
-        {
-            float time = Time.realtimeSinceStartup;
-            FillFromMesh(GetComponent<MeshFilter>());
-            float fTime = Time.realtimeSinceStartup - time;
-            Debug.Log("Process took: " + fTime + " Seconds" );
-        }
-
-        //Testing a raycast
-       if(Input.GetMouseButtonDown(0))
-        {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if(Physics.Raycast(ray, out hit, 100.0f))
-            {
-                Debug.Log("The raycast hit!");
-            }
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if(test != null && test.Count > 0)
-        {
-            for(int i = 0; i < test.Count; ++i)
-            {
-                Gizmos.DrawWireSphere(test[i].pos, 0.14f);
-                if(test[i].adjacent_nodes != null)
-                {
-                    for(int j = 0; j < test[i].adjacent_nodes.Count; ++j)
-                    Debug.DrawLine(test[i].pos, test[test[i].adjacent_nodes[j]].pos, Color.magenta, 0.01f);
-                }
-            }
-        }
-    }
-
+    //This function takes the information of a mesh filter and calls al the necessary functions to insert all waynodes
+    //and calculates the adjacency using CalculateAdjacency()
     public void FillFromMesh(MeshFilter mf)
     {
         Mesh m = mf.mesh;
@@ -201,9 +151,81 @@ public class WaypointClasses : MonoBehaviour
 
             //Insert this WayNode
             WayNode n = new WayNode(new_verts);
-            test.Insert(i,n);
+            Insert(i, n);
         }
-        test.CalculateAdjacency();
+        CalculateAdjacency();
+    }
+
+    public void GizmosDraw()
+    {
+        if (this != null && this.Count > 0)
+        {
+            for (int i = 0; i < this.Count; ++i)
+            {
+                Gizmos.DrawWireSphere(this[i].pos, 0.14f);
+                if (this[i].adjacent_nodes != null)
+                {
+                    for (int j = 0; j < this[i].adjacent_nodes.Count; ++j)
+                        Debug.DrawLine(this[i].pos, this[this[i].adjacent_nodes[j]].pos, Color.magenta, 0.01f);
+                }
+            }
+        }
+    }
+};
+
+public class WaypointClasses : MonoBehaviour
+{
+    //Adjacency List
+    AdjacencyList test;
+    // Start is called before the first frame update
+    void Start()
+    {
+        test = new AdjacencyList();   
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //If the spacebar is pressed
+        if (Input.GetKeyDown(KeyCode.Space) == true)
+        {
+            float time = Time.realtimeSinceStartup;
+            test.FillFromMesh(GetComponent<MeshFilter>());
+            float fTime = Time.realtimeSinceStartup - time;
+            Debug.Log("Process took: " + fTime + " Seconds" );
+        }
+
+        //Testing a raycast
+       if(Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if(Physics.Raycast(ray, out hit, 100.0f))
+            {
+                Debug.Log("The raycast hit!");
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        GizmosDraw();
+    }
+
+    public void GizmosDraw()
+    {
+        if (test != null && test.Count > 0)
+        {
+            for (int i = 0; i < test.Count; ++i)
+            {
+                Gizmos.DrawWireSphere(test[i].pos, 0.14f);
+                if (test[i].adjacent_nodes != null)
+                {
+                    for (int j = 0; j < test[i].adjacent_nodes.Count; ++j)
+                        Debug.DrawLine(test[i].pos, test[test[i].adjacent_nodes[j]].pos, Color.magenta, 0.01f);
+                }
+            }
+        }
     }
 }
 
