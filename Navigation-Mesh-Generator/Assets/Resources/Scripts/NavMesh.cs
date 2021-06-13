@@ -11,22 +11,40 @@ using UnityEngine;
 public class NavMesh : MonoBehaviour
 {
     IdentifyVertices iv = null;
-    WaypointGraphGen wgraph= null;
-    AdjacencyList test = null;
+    AdjacencyList adjlist = null;
     Mesh mesh = null;
     MeshFilter mf = null;
 
     LibTessDotNet.Tess Tess = null;
+
+    //Public vars
+    public bool holed_mesh = true;
+    public bool draw_adjacency = true;
+    public bool draw_mesh = true;
+    public bool draw_vertices = true;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
+        CreateNavigationMesh();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    private void CreateNavigationMesh()
+    {
         iv = gameObject.AddComponent<IdentifyVertices>();
-        wgraph = gameObject.AddComponent<WaypointGraphGen>();
-        test = new AdjacencyList();
+        adjlist = new AdjacencyList();
 
         iv.GetMapVertices(); //Obtain the vertices of the map (our composite collider)
         CreateMesh(); // Creates the mesh from the information of the vertices
-        
+
 
         GameObject collider = new GameObject();
         collider.gameObject.AddComponent<MeshCollider>();
@@ -34,13 +52,7 @@ public class NavMesh : MonoBehaviour
         mc.sharedMesh = mesh;
         collider.layer = 6; //Here goes the NavMesh Layer!
 
-        test.FillFromMesh(GetComponent<MeshFilter>()); //Calculate the adjacency list given our mesh!
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        adjlist.FillFromMesh(GetComponent<MeshFilter>()); //Calculate the adjacency list given our mesh!
     }
 
     private LibTessDotNet.ContourVertex[] CreateContour(List<Vector2> list)
@@ -80,17 +92,19 @@ public class NavMesh : MonoBehaviour
         Tess.AddContour(CreateContour(iv.pol_verts), LibTessDotNet.ContourOrientation.CounterClockwise);
 
         //Adding the contours of the holes
-        for (int i = 0; i < iv.holes.Count; ++i)
-            Tess.AddContour(CreateContour(iv.holes[i]), LibTessDotNet.ContourOrientation.Clockwise);
+        if (holed_mesh == true)
+        {
+            for (int i = 0; i < iv.holes.Count; ++i)
+                Tess.AddContour(CreateContour(iv.holes[i]), LibTessDotNet.ContourOrientation.Clockwise);
+        }
 
         Tess.Tessellate(LibTessDotNet.WindingRule.EvenOdd);
 
         //Generate a Unity Mesh from the Tesselator information
         if(mesh == null)
-        mesh = new Mesh();
+            mesh = new Mesh();
 
         TessToMesh(Tess,mesh);
-
         //Turn the mesh into a mesh filter
         mf = gameObject.AddComponent<MeshFilter>();
         mf.mesh = mesh;
@@ -98,17 +112,22 @@ public class NavMesh : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (mesh != null)
+        if (mesh != null && draw_mesh == true)
             MeshGizmosDraw(mesh);
 
-        if (test != null)
-            test.GizmosDraw();
+        if (adjlist != null && draw_adjacency == true)
+            adjlist.GizmosDraw();
+
+        if (iv != null && draw_vertices == true)
+            iv.GizmosDraw();
     }
 
     public void MeshGizmosDraw(Mesh mesh)
     {
-        //Gizmos.color = Color.gray;
-        //Gizmos.DrawMesh(mesh);
+        Color mesh_col = Color.white;
+        mesh_col.a = 0.5f;
+        Gizmos.color = mesh_col;
+        Gizmos.DrawMesh(mesh);
         Gizmos.color = Color.yellow;
 
         List<Vector3> verts = new List<Vector3>();
@@ -116,12 +135,6 @@ public class NavMesh : MonoBehaviour
             return;
 
         mesh.GetVertices(verts);
-
-        for (int i = 0; i < verts.Count; ++i)
-        {
-            Gizmos.DrawWireSphere(verts[i], 0.14f);
-        }
-
         int[] tris = mesh.GetTriangles(0);
 
         //Avoid getting out of range on the last vertex

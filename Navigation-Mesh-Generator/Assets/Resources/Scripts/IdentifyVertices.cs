@@ -21,6 +21,11 @@ public class IdentifyVertices : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+        
+    }
+
+    public void GizmosDraw()
+    {
         Gizmos.color = Color.yellow;
 
         for (int i = 0; i < verts.Count; ++i)
