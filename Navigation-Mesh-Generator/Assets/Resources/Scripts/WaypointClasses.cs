@@ -158,6 +158,7 @@ public class AdjacencyList : SortedList < int, WayNode >
 
     public void GizmosDraw()
     {
+        Gizmos.color = Color.white;
         if (this != null && this.Count > 0)
         {
             for (int i = 0; i < this.Count; ++i)

@@ -6,7 +6,8 @@ public class IdentifyVertices : MonoBehaviour
 {
     CompositeCollider2D col;
     List<Vector2> verts = new List<Vector2>();
-    [SerializeField] List<Vector2> pol_verts = new List<Vector2>();
+    [SerializeField] public List<Vector2> pol_verts = new List<Vector2>();
+    [SerializeField] public List<List<Vector2>> holes = new List<List<Vector2>>();
 
     //Test Mesh
     public Mesh m = null;
@@ -60,7 +61,16 @@ public class IdentifyVertices : MonoBehaviour
             if (i == 1)
             {
                 pol_verts.AddRange(pathVerts);
-                pol_verts.Reverse();        //Now the polygon is counterclock-wise
+                pol_verts.Reverse();        //Now the polygon is counterclock-wise  IMPORTANT for Winding Rules! http://www.glprogramming.com/red/chapter11.html 
+            }
+            else  if ( i > 1)//Case for nested holes
+            {
+                List<Vector2> l = new List<Vector2>();
+                l.AddRange(pathVerts);
+                l.Reverse();            //Now the polygon HOLE is clock-wise  IMPORTANT for Winding Rules!
+
+                //Maybe I have to do: if (i == pair number) reverse the list so the holes list only contains clockwise polygons
+                holes.Add(l); //Add the list of vertices of the current hole to the holes list
             }
         }
     }
@@ -80,12 +90,35 @@ public class IdentifyVertices : MonoBehaviour
         //Add a contour
         Tess.AddContour(contour, LibTessDotNet.ContourOrientation.CounterClockwise);
 
-        Tess.Tessellate();
+        //Testing the addition of holes
+        for (int i = 0; i < holes.Count; ++i)
+        {
+            LibTessDotNet.ContourVertex[] hole_contour = new LibTessDotNet.ContourVertex[pol_verts.Count];
+            
+            for (int j = 0; j < holes[i].Count; ++j)
+            {
+                hole_contour[j] = new LibTessDotNet.ContourVertex();
+                hole_contour[j].Position = new LibTessDotNet.Vec3(holes[i][j].x, holes[i][j].y, 0.0f);
+            }
+            Tess.AddContour(hole_contour, LibTessDotNet.ContourOrientation.Clockwise);
+            //Tess.Tessellate(LibTessDotNet.WindingRule.EvenOdd);
+        }
+
+        Tess.Tessellate(LibTessDotNet.WindingRule.EvenOdd);
+
+
 
         //Test to generate a mesh
         m = new Mesh();
 
-        Vector3[] vertices = new Vector3[pol_verts.Count];
+        //Count all vertices
+        int total_verts = 0;
+        total_verts += pol_verts.Count;
+        foreach (List<Vector2> list in holes)
+        {
+            total_verts += list.Count;
+        }
+        Vector3[] vertices = new Vector3[Tess.Vertices.Length];
 
         //for (int i = 0; i < pol_verts.Count; ++i)
         //{
@@ -110,6 +143,4 @@ public class IdentifyVertices : MonoBehaviour
         mf = gameObject.AddComponent<MeshFilter>();
         mf.mesh = m;
     }
-
-    //Sort vertices in ascending X order then ascending y order
 }
