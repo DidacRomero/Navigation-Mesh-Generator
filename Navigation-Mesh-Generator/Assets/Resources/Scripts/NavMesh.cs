@@ -10,12 +10,16 @@ using UnityEngine;
 
 public class NavMesh : MonoBehaviour
 {
-    IdentifyVertices iv = null;
-    AdjacencyList adjlist = null;
+    //Vars (Mesh Generation)
+    IdentifyVertices iv = null;                     //Class to identify the vertices of our complex polygon and its holes
+    AdjacencyList adjlist = null;                   // Class to create an adjacency list and create the adjacency information necessary for pathfinding
+    LibTessDotNet.Tess Tess = null;             //Tesselator class from LibTessDotNet, we use it to create our mesh from the information of the vertices and we will convert its mesh to a unity mesh for our adjacancy list
+
+    //Simple Unity components
     Mesh mesh = null;
     MeshFilter mf = null;
 
-    LibTessDotNet.Tess Tess = null;
+
 
     //Public vars
     public bool holed_mesh = true;
@@ -55,6 +59,7 @@ public class NavMesh : MonoBehaviour
         adjlist.FillFromMesh(GetComponent<MeshFilter>()); //Calculate the adjacency list given our mesh!
     }
 
+    //Helper function to create a LibTessDotNet contour given a list of positions in a 2D space
     private LibTessDotNet.ContourVertex[] CreateContour(List<Vector2> list)
     {
         LibTessDotNet.ContourVertex[] contour = new LibTessDotNet.ContourVertex[list.Count];
@@ -68,7 +73,7 @@ public class NavMesh : MonoBehaviour
         return contour;
     }
 
-    //This function transfers the tesselation information onto our Mesh
+    //This function transfers the tesselation information onto our Unity Mesh
     private void TessToMesh(LibTessDotNet.Tess T,Mesh m)
     {
         Vector3[] vertices = new Vector3[T.Vertices.Length];
@@ -83,6 +88,7 @@ public class NavMesh : MonoBehaviour
         m.RecalculateNormals();
     }
 
+    //This function generates a LibTessDotNet tesselated mesh using the outer polygon and the different holes of the mesh.
     public void CreateMesh()
     {
         if(Tess == null)
