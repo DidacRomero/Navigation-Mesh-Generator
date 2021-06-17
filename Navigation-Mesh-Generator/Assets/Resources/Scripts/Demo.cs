@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
 public class Demo : MonoBehaviour
 {
@@ -24,6 +25,11 @@ public class Demo : MonoBehaviour
     public Toggle draw_mesh = null;
     public Toggle draw_vertices = null;
     public Toggle draw_adjacency = null;
+
+    //Vars to test number of nodes using original 2D approach
+    Tilemap tilemap = null;
+    Sprite s = null;
+    GameObject[] tiles = null;
     
     // Start is called before the first frame update
     void Start()
@@ -85,6 +91,8 @@ public class Demo : MonoBehaviour
         if (nm.generated == true)
             nm.DestroyNavigationMesh();
 
+        tiles = null;
+
         meshes[d_value].SetActive(false);
         d_value = change.value;
 
@@ -122,6 +130,16 @@ public class Demo : MonoBehaviour
     {
         NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
         nm.CreateNavigationMesh();
+
+        //Count total nodes of the navigation mesh
+        Text t = GameObject.Find("Node_Count").GetComponent<Text>();
+        t.text = "Total Nodes: " + nm.AdjacencyListCount();
+
+        //Count all nodes of the traditional pathfinding
+        if(s == null)
+            s = Resources.Load("Tilesets/tileset_dungeon.png") as Sprite;
+
+        Debug.Log(" Ammount of traditional nodes: " + GetTileAmmounts());
     }
 
     //Load Meshes
@@ -142,12 +160,27 @@ public class Demo : MonoBehaviour
         meshes.Add(Instantiate(Resources.Load<GameObject>("PreFabs/Maps/Grid_Map_Medium")));
         meshes.Add(Instantiate(Resources.Load<GameObject>("PreFabs/Maps/Grid_Map_Small")));
         meshes.Add(Instantiate(Resources.Load<GameObject>("PreFabs/Maps/Grid_Map_Smallest")));
+        meshes.Add(Instantiate(Resources.Load<GameObject>("PreFabs/Maps/Grid_Map_Giant")));
 
-        foreach( GameObject go in meshes)
+
+        foreach ( GameObject go in meshes)
         {
             if(go != null)
                 go.SetActive(false);
         }
         meshes[d_value].SetActive(true);
+    }
+
+    //This function is explictly copied from this forum post https://answers.unity.com/questions/1674467/count-the-amount-of-a-certain-tile-in-a-tilemap.html
+    public int GetTileAmmounts()
+    {
+        if (tiles == null)
+        {
+            tiles = GameObject.FindGameObjectsWithTag("Walkable");
+            if (tiles == null)
+                return -1;
+        }
+
+        return tiles.Length;
     }
 }

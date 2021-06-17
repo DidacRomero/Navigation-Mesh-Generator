@@ -176,4 +176,12 @@ public class NavMesh : MonoBehaviour
         //Debug.DrawLine(vertices[1], vertices[2], Color.green, 0.01f);
 
     }
+
+    public int AdjacencyListCount()
+    {
+        if (adjlist != null)
+            return adjlist.Count;
+        else
+            return -1;
+    }
 }
