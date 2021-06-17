@@ -139,7 +139,8 @@ public class Demo : MonoBehaviour
         if(s == null)
             s = Resources.Load("Tilesets/tileset_dungeon.png") as Sprite;
 
-        Debug.Log(" Ammount of traditional nodes: " + GetTileAmmounts());
+        Text t2 = GameObject.Find("2DNode_Count").GetComponent<Text>();
+        t2.text = "Original 2D Nodes: " + GetTileAmmounts();
     }
 
     //Load Meshes
