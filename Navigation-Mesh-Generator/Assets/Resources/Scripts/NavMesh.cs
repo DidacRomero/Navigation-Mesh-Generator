@@ -70,12 +70,12 @@ public class NavMesh : MonoBehaviour
         adjlist = null;
 
         if(collider != null)
-            Destroy(collider);
+            DestroyImmediate(collider);
 
         Tess = null;
 
-        Destroy(mesh);
-        Destroy(mf);
+        DestroyImmediate(mesh);
+        DestroyImmediate(mf);
         generated = false;
     }
 

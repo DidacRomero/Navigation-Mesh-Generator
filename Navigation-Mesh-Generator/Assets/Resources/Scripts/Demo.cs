@@ -30,6 +30,10 @@ public class Demo : MonoBehaviour
     Tilemap tilemap = null;
     Sprite s = null;
     GameObject[] tiles = null;
+
+    //vars for timing
+    public int iterations = 10;
+    InputField input_iterations = null;
     
     // Start is called before the first frame update
     void Start()
@@ -49,11 +53,13 @@ public class Demo : MonoBehaviour
         if(loading_text != null)
             loading_text.SetActive(false);
 
+        input_iterations = GameObject.Find("Input_Iterations").GetComponent<InputField>();
+
         //Load all meshes
         LoadMeshes();
 
 
-        //Setup listeners for toggles
+        //Setup listeners for toggles & UI Input field
         draw_mesh.onValueChanged.AddListener(delegate {
             ToggleValueChanged(draw_mesh);
         });
@@ -64,6 +70,10 @@ public class Demo : MonoBehaviour
 
         draw_adjacency.onValueChanged.AddListener(delegate {
             ToggleValueChanged(draw_adjacency);
+        });
+
+        input_iterations.onValueChanged.AddListener(delegate {
+            ChangeIterations(input_iterations);
         });
     }
 
@@ -126,10 +136,13 @@ public class Demo : MonoBehaviour
         nm.draw_vertices = value;
     }
 
-    public void CreateNavMesh()
+    public float CreateNavMesh()
     {
         NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+        //Time before
+        float time = Time.realtimeSinceStartup;
         nm.CreateNavigationMesh();
+        time = Time.realtimeSinceStartup - time;
 
         //Count total nodes of the navigation mesh
         Text t = GameObject.Find("Node_Count").GetComponent<Text>();
@@ -137,6 +150,26 @@ public class Demo : MonoBehaviour
 
         //Count all nodes of the traditional pathfinding
         if(s == null)
+            s = Resources.Load("Tilesets/tileset_dungeon.png") as Sprite;
+
+        Text t2 = GameObject.Find("2DNode_Count").GetComponent<Text>();
+        t2.text = "Original 2D Nodes: " + GetTileAmmounts();
+
+        return time;
+    }
+
+    public void CreateNavMeshNoTimer()
+    {
+        NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+        //Time before
+        nm.CreateNavigationMesh();
+
+        //Count total nodes of the navigation mesh
+        Text t = GameObject.Find("Node_Count").GetComponent<Text>();
+        t.text = "Total Nodes: " + nm.AdjacencyListCount();
+
+        //Count all nodes of the traditional pathfinding
+        if (s == null)
             s = Resources.Load("Tilesets/tileset_dungeon.png") as Sprite;
 
         Text t2 = GameObject.Find("2DNode_Count").GetComponent<Text>();
@@ -183,5 +216,38 @@ public class Demo : MonoBehaviour
         }
 
         return tiles.Length;
+    }
+
+    //This function repeats the process of generating a navigation mesh over and over and returns the average time in milliseconds
+    public float CalcGenerationSpeed(int iterations)
+    {
+        float total_time = 0.0f;
+        for(int i = 0; i < iterations; ++i)
+        {
+            total_time +=  CreateNavMesh();
+            //Destroy so we can repeat the process from scratch
+            NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+            if (nm.generated == true)
+                nm.DestroyNavigationMesh();
+        }
+
+        return total_time/(float)iterations;
+    }
+
+    public void ChangeIterations(InputField change)
+    {
+        if(change.text != "")
+        iterations = int.Parse(change.text);
+    }
+
+    public void IterateAndTime()
+    {
+        NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+        if (nm.generated == true)
+            nm.DestroyNavigationMesh();
+
+        float time = CalcGenerationSpeed(iterations);
+        Text t = GameObject.Find("Timer").GetComponent<Text>();
+        t.text = "Average navmesh generation time: " + (time*1000.0f) + " ms";
     }
 }
