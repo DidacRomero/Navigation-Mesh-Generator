@@ -19,6 +19,8 @@ public class NavMesh : MonoBehaviour
     Mesh mesh = null;
     MeshFilter mf = null;
 
+    GameObject collider = null; // Reference to the collider we place to calculate adjacency
+
 
 
     //Public vars
@@ -26,13 +28,14 @@ public class NavMesh : MonoBehaviour
     public bool draw_adjacency = true;
     public bool draw_mesh = true;
     public bool draw_vertices = true;
+    public bool generated = false;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        CreateNavigationMesh();
+        //CreateNavigationMesh();
     }
 
     // Update is called once per frame
@@ -41,7 +44,7 @@ public class NavMesh : MonoBehaviour
         
     }
 
-    private void CreateNavigationMesh()
+    public  void CreateNavigationMesh()
     {
         iv = gameObject.AddComponent<IdentifyVertices>();
         adjlist = new AdjacencyList();
@@ -50,13 +53,30 @@ public class NavMesh : MonoBehaviour
         CreateMesh(); // Creates the mesh from the information of the vertices
 
 
-        GameObject collider = new GameObject();
+        collider = new GameObject();
         collider.gameObject.AddComponent<MeshCollider>();
         MeshCollider mc = collider.GetComponent<MeshCollider>();
         mc.sharedMesh = mesh;
         collider.layer = 6; //Here goes the NavMesh Layer!
 
         adjlist.FillFromMesh(GetComponent<MeshFilter>()); //Calculate the adjacency list given our mesh!
+        generated = true;
+    }
+
+    //Clean all data structures
+    public void DestroyNavigationMesh()
+    {
+        iv = null;
+        adjlist = null;
+
+        if(collider != null)
+            Destroy(collider);
+
+        Tess = null;
+
+        Destroy(mesh);
+        Destroy(mf);
+        generated = false;
     }
 
     //Helper function to create a LibTessDotNet contour given a list of positions in a 2D space
@@ -92,7 +112,7 @@ public class NavMesh : MonoBehaviour
     public void CreateMesh()
     {
         if(Tess == null)
-        Tess = new LibTessDotNet.Tess();
+            Tess = new LibTessDotNet.Tess();
 
         //Add Outer polygon contour!
         Tess.AddContour(CreateContour(iv.pol_verts), LibTessDotNet.ContourOrientation.CounterClockwise);
