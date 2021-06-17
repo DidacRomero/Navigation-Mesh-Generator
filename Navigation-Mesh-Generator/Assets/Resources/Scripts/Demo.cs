@@ -14,6 +14,16 @@ public class Demo : MonoBehaviour
     List<GameObject> meshes = null;
 
     GameObject current = null;
+
+    public bool d_mesh = true;
+    public bool d_vertices = true;
+    public bool d_adjacency = true;
+
+
+    //Toggles for visibility of vertices, mesh etc.
+    public Toggle draw_mesh = null;
+    public Toggle draw_vertices = null;
+    public Toggle draw_adjacency = null;
     
     // Start is called before the first frame update
     void Start()
@@ -35,12 +45,37 @@ public class Demo : MonoBehaviour
 
         //Load all meshes
         LoadMeshes();
+
+
+        //Setup listeners for toggles
+        draw_mesh.onValueChanged.AddListener(delegate {
+            ToggleValueChanged(draw_mesh);
+        });
+
+        draw_vertices.onValueChanged.AddListener(delegate {
+            ToggleValueChanged(draw_vertices);
+        });
+
+        draw_adjacency.onValueChanged.AddListener(delegate {
+            ToggleValueChanged(draw_adjacency);
+        });
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        CheckDrawGizmos();
+    }
+
+    private void CheckDrawGizmos()
+    {
+        NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+        if (nm.generated == true)
+        {
+            nm.draw_vertices = d_vertices;
+            nm.draw_adjacency = d_adjacency;
+            nm.draw_mesh = d_mesh;
+        }
     }
 
     void DropdownValueChanged(Dropdown change)
@@ -58,6 +93,29 @@ public class Demo : MonoBehaviour
 
         Debug.Log("New value: " + change.value);
 
+    }
+
+    void ToggleValueChanged(Toggle change)
+    {
+        NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+        if (change == draw_vertices)
+        {
+            d_vertices = change.isOn;
+        }
+        else if(change == draw_mesh)
+        {
+            d_mesh = change.isOn;
+        }
+        else
+        {
+            d_adjacency = change.isOn;
+        }
+    }
+
+    public void DrawVerticesChanged(bool value)
+    {
+        NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+        nm.draw_vertices = value;
     }
 
     public void CreateNavMesh()
