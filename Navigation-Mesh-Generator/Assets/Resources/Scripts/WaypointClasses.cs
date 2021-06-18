@@ -172,6 +172,19 @@ public class AdjacencyList : SortedList < int, WayNode >
             }
         }
     }
+
+    public void AdjacentNodesDraw(int id)
+    {
+        Gizmos.color = Color.yellow;
+        if (this != null && this.Count > 0)
+        {
+            if (this[id].adjacent_nodes != null)
+            {
+                for (int i = 0; i < this[id].adjacent_nodes.Count; ++i)
+                    Debug.DrawLine(this[id].pos, this[this[id].adjacent_nodes[i]].pos, Color.yellow, 5.0f);
+            }
+        }
+    }
 };
 
 public class WaypointClasses : MonoBehaviour

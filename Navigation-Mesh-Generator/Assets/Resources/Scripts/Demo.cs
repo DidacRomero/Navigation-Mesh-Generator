@@ -14,8 +14,6 @@ public class Demo : MonoBehaviour
     [SerializeField]
     List<GameObject> meshes = null;
 
-    GameObject current = null;
-
     public bool d_mesh = true;
     public bool d_vertices = true;
     public bool d_adjacency = true;
@@ -81,6 +79,24 @@ public class Demo : MonoBehaviour
     void Update()
     {
         CheckDrawGizmos();
+
+        //Check for a click on the mesh
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out hit, 100.0f))
+            {
+                Debug.Log("The raycast hit triangle with index: " + hit.triangleIndex);
+                NavMesh nm = meshes[d_value].GetComponent<NavMesh>();
+                nm.DrawAdjacentNodes(hit.triangleIndex);
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        
     }
 
     private void CheckDrawGizmos()

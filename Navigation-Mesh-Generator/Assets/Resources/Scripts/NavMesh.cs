@@ -184,4 +184,10 @@ public class NavMesh : MonoBehaviour
         else
             return -1;
     }
+
+    public void DrawAdjacentNodes(int id)
+    {
+        if (adjlist != null && generated == true)
+            adjlist.AdjacentNodesDraw(id);
+    }
 }
