@@ -112,7 +112,7 @@ public class NavMesh : MonoBehaviour
     public void CreateMesh()
     {
         if(Tess == null)
-            Tess = new LibTessDotNet.Tess();
+            Tess = new LibTessDotNet.Tess(); //Instantiate a Tess class!
 
         //Add Outer polygon contour!
         Tess.AddContour(CreateContour(iv.pol_verts), LibTessDotNet.ContourOrientation.CounterClockwise);
