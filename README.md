@@ -8,7 +8,8 @@ Here you will find the project with all the code, testing, scripts of tests and 
 # Installing the tool
 
 Befor installing the tool, we need to install LibTessDotNet, you can do so by downloading the package
-from this [repo](https://github.com/pacoelayudante/com.guazu.lib-tess-dot-net) by [pacoelayudante](https://github.com/pacoelayudante). It contains steps on how to install it but if you're not sure, download the repo and in Unity under [...]
+from this [repo](https://github.com/pacoelayudante/com.guazu.lib-tess-dot-net) by [pacoelayudante](https://github.com/pacoelayudante). It contains steps on how to install it but if you're not sure, download the repo and in Unity under Window > Package Manager,
+you can click on the + icon and Add Package from Disk. Now you only need to browse the package.json file of com.guazu.lib-tess-dot-net and double click on it amd Unity will install that library right away.
 
 
 To install the tool/library to generate navigation meshes download and extract the .zip of the releases section.
